@@ -7,17 +7,20 @@ using namespace std;
 
 int main()
 {
-    double data[] = {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
+    Matrix3d H(3, 3);
+    H << 4, 1, 1,
+        1, 5, 1,
+        1, 1, 3;
 
-    Map<Vector4d> current_state(data);
-    Map<Vector2d> current_input(data + 4);
-    Map<Vector4d> ref_state(data + 6);
+    Vector3d G = {1, 2, 3};
 
-    Vector2d current_position = current_state.head<2>();
-    Vector2d ref_position = ref_state.head<2>();
+    LDLT<Matrix3d> solver;
+    solver.compute(H);
+    Vector3d X = solver.solve(G);
 
-    Vector2d error = ref_position - current_position;
+    cout << X << endl;
 
+    Vector3d error = H * X - G;
     cout << error << endl;
 
     return 0;
